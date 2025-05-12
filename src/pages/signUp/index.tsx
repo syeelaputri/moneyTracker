@@ -14,39 +14,49 @@ import {Header, TextInput} from '../../components/molecules';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {showMessage} from 'react-native-flash-message';
 import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
-import {getDatabase, ref, set} from 'firebase/database';
+// import {getDatabase, ref, set} from 'firebase/database';
 
-const SignUp = ({navigation}) => {
+const SignUp = ({}) => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [photo, setPhoto] = useState(NullPhoto);
   const [photoBased64, setPhotoBased64] = useState('');
 
+  const onFullNameChange = (value) => {
+    setFullName(value);
+  };
+  
+  const onEmailChange = (value) => {
+    setEmail(value);
+  };
+  const onPasswordChange = (value) => {
+    setPassword(value);
+  };
+
   const onSubmit = () => {
+    const data = {
+      fullName: fullName,
+      email: email,
+      password: password,
+      photo: photoBased64,
+    }
+
     const auth = getAuth();
-    const db = getDatabase();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(userCredential => {
-        // Signed up
-        const user = userCredential.user;
-        set(ref(db, 'users/' + user.uid), {
-          fullName: fullName,
-          email: email,
-          photo: photoBased64,
-        });
-        showMessage({
-          message: 'Registration success',
-          type: 'success',
-        });
-        navigation.navigate('signIn');
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed up 
+          const user = userCredential.user;
+          console.log(user)
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          showMessage({
+            message: errorMessage,
+            type: 'danger',
       })
-      .catch(error => {
-        showMessage({
-          message: error.message,
-          type: 'danger',
-        });
-      });
+    })
   };
 
   const getImage = async () => {
@@ -71,6 +81,7 @@ const SignUp = ({navigation}) => {
       setPhoto(source);
     }
   };
+
   return (
     <ScrollView style={styles.container}>
       <Header title="Sign Up" />
@@ -88,20 +99,23 @@ const SignUp = ({navigation}) => {
         <Gap height={26} />
         <TextInput
           label="Full Name"
+          value={fullName}
           placeholder="Type your full name"
-          onChangeText={e => setFullName(e)}
+          onChangeText={onFullNameChange}
         />
         <Gap height={16} />
         <TextInput
           label="Email Address"
+          value={email}
           placeholder="Type your email address"
-          onChangeText={e => setEmail(e)}
+          onChangeText={onEmailChange}
         />
         <Gap height={16} />
         <TextInput
           label="Password"
+          value={password}
           placeholder="Type your password"
-          onChangeText={e => setPassword(e)}
+          onChangeText={onPasswordChange}
           secureTextEntry={true}
         />
         <Gap height={24} />
@@ -110,6 +124,8 @@ const SignUp = ({navigation}) => {
     </ScrollView>
   );
 };
+
+export default SignUp;
 
 const styles = StyleSheet.create({
   container: {
@@ -155,5 +171,3 @@ const styles = StyleSheet.create({
     borderRadius: 90 / 2,
   },
 });
-
-export default SignUp;

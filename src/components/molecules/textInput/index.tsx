@@ -3,11 +3,11 @@
 import {StyleSheet, Text, View, TextInput as Input} from 'react-native';
 import React from 'react';
 
-const TextInput = ({label, placeholder}) => {
+const TextInput = ({label, placeholder, value, onChangeText}) => {
   return (
     <View>
       <Text style={styles.label}>{label}</Text>
-      <Input placeholder={placeholder} style={styles.input}/>
+      <Input placeholder={placeholder} value={value} onChangeText={onChangeText} style={styles.input} secureTextEntry={false}/>
     </View>
   );
 };
