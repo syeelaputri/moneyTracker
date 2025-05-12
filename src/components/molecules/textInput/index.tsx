@@ -7,7 +7,7 @@ const TextInput = ({label, placeholder, value, onChangeText}) => {
   return (
     <View>
       <Text style={styles.label}>{label}</Text>
-      <Input placeholder={placeholder} value={value} onChangeText={onChangeText} style={styles.input} secureTextEntry={false}/>
+      <Input placeholder={placeholder} value={value} onChangeText={onChangeText} style={styles.input}/>
     </View>
   );
 };

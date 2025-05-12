@@ -14,18 +14,21 @@ const SignIn = ({navigation}) => {
   const onSubmit = () => {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
-      .then(userCredential => {
-        // Signed in
+      .then((userCredential) => {
+        // Signed in 
         const user = userCredential.user;
         navigation.navigate('home', {uid: user.uid});
       })
-      .catch(error => {
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
         showMessage({
-          message: error.message,
+          message: errorMessage,
           type: 'danger',
         });
       });
   };
+
   return (
     <View style={styles.pageContainer}>
       <Header title="Sign In" />
@@ -33,15 +36,17 @@ const SignIn = ({navigation}) => {
         <Gap height={26} />
         <TextInput
           label="Email Address"
+          value={email}
           placeholder="Type your email address"
-          onChangeText={e => setEmail(e)}
+          onChangeText={value=>setEmail(value)}
         />
         <Gap height={16} />
         <TextInput
           label="Password"
+          value={password}
           placeholder="Type your password"
           secureTextEntry={true}
-          onChangeText={e => setPassword(e)}
+          onChangeText={value=>setPassword(value)}
         />
         <Gap height={24} />
         <Button label="Sign In" onPress={onSubmit} />
