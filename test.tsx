@@ -14,40 +14,62 @@ import {Header, TextInput} from '../../components/molecules';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {showMessage} from 'react-native-flash-message';
 import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
-import {getDatabase, ref, set} from 'firebase/database';
+import {getDatabase, ref, set, get} from 'firebase/database';
 
 const SignUp = ({navigation}) => {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [photo, setPhoto] = useState(NullPhoto);
-  const [photoBased64, setPhotoBased64] = useState('');
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [photo, setPhoto] = useState(NullPhoto);
+    const [photoBased64, setPhotoBased64] = useState('');
 
-  const onSubmit = () => {
-    const auth = getAuth();
-    const db = getDatabase();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(userCredential => {
-        // Signed up
-        const user = userCredential.user;
-        set(ref(db, 'users/' + user.uid), {
-          fullName: fullName,
-          email: email,
-          photo: photoBased64,
-        });
-        showMessage({
-          message: 'Registration success',
-          type: 'success',
-        });
-        navigation.navigate('signIn');
-      })
-      .catch(error => {
-        showMessage({
-          message: error.message,
-          type: 'danger',
-        });
-      });
-  };
+        const isUserAlreadyExists = async () => {
+            const db = getDatabase();
+            const userRef = ref(db, 'users');
+            const snapshot = await get(userRef);
+            if (snapshot.exists()) {
+                const users = snapshot.val();
+                for (const userId in users) {
+                    if (users[userId].email === email) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+    const onSubmit = async() => {
+        if (await isUserAlreadyExists()) {
+            showMessage({
+                message: 'Email already exists',
+                type: 'danger',
+            });
+            return;
+        }
+        
+        const auth = getAuth();
+        const db = getDatabase();
+        createUserWithEmailAndPassword(auth, email, password)
+            .then(userCredential => {
+                // Signed up
+                const user = userCredential.user;
+                set(ref(db, 'users/' + user.uid), {
+                    fullName: fullName,
+                    email: email,
+                    photo: photoBased64,
+                });
+                showMessage({
+                    message: 'Registration success',
+                    type: 'success',
+                });
+                navigation.navigate('signIn');
+            })
+            .catch(error => {
+                showMessage({
+                    message: error.message,
+                    type: 'danger',
+                });
+            });
 
   const getImage = async () => {
     const result = await launchImageLibrary({

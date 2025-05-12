@@ -3,6 +3,8 @@ import SplashScreen from './src/pages/splash';
 import SignUp from './src/pages/signUp';
 import SignIn from './src/pages/signIn';
 import Home from './src/pages/home';
+import CashOnHand from './src/pages/cashOnHand';
+import CashOnBank from './src/pages/cashOnBank';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -33,6 +35,16 @@ const App = () => {
         <Stack.Screen
           name="home"
           component={Home}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="cashOnHand"
+          component={CashOnHand}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="cashOnBank"
+          component={CashOnBank}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
