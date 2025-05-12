@@ -1,4 +1,4 @@
-import Logo from './Logo.svg';
-import NullPhoto from './null-photo.png';
+// export semua assets
 
-export {Logo, NullPhoto};
+export const Logo = require('./Logo.png');
+export const NullPhoto = require('./null-photo.png');
