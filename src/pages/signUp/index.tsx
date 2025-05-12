@@ -14,9 +14,9 @@ import {Header, TextInput} from '../../components/molecules';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {showMessage} from 'react-native-flash-message';
 import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
-// import {getDatabase, ref, set} from 'firebase/database';
+import {getDatabase, ref, set} from 'firebase/database';
 
-const SignUp = ({}) => {
+const SignUp = ({navigation}) => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +26,6 @@ const SignUp = ({}) => {
   const onFullNameChange = (value) => {
     setFullName(value);
   };
-  
   const onEmailChange = (value) => {
     setEmail(value);
   };
@@ -38,25 +37,31 @@ const SignUp = ({}) => {
     const data = {
       fullName: fullName,
       email: email,
-      password: password,
       photo: photoBased64,
     }
 
     const auth = getAuth();
+    const db = getDatabase();
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           // Signed up 
           const user = userCredential.user;
-          console.log(user)
-        })
+          // Simpan ke dalam realtime database
+            set(ref(db, 'users/' + user.uid), data);
+            showMessage({
+              message: "Registrasi berhasil. Silahkan login!",
+              type: 'success',
+            });
+            navigation.navigate('signIn');
+          })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           showMessage({
             message: errorMessage,
             type: 'danger',
-      })
-    })
+      });
+    });
   };
 
   const getImage = async () => {
