@@ -7,7 +7,7 @@ import {NullPhoto} from '../../assets';
 import {getDatabase, ref, onValue} from 'firebase/database';
 
 
-const Home = ({route}) => {
+const Home = ({route, navigation}) => {
   const {uid} = route.params;
   const [user, setUser] = useState({});
   const [fullName, setFullName] = useState('');
@@ -38,9 +38,7 @@ const Home = ({route}) => {
     <View style={styles.pageContainer}>
       <View style={styles.headerContainer}>
         <View>
-          {/* <Text style={styles.appTitle}>{`Hi, ${fullName}`}</Text> */}
           <Text style={styles.appTitle}>Money Tracker</Text>
-          {/* <Text style={styles.appSubTitle}>Have you track your money today?</Text> */}
           <Text style={styles.appSubTitle}>Welcome, {fullName}</Text>
         </View>
         <Image source={photo} style={styles.photo} />
@@ -58,9 +56,9 @@ const Home = ({route}) => {
           <Text style={styles.subTotal}>Rp. {cashOnBank}</Text>
         </View>
         <Text style={styles.subTitle}>Add Transaction</Text>
-        <Button label="Cash On Hand" onPress={() => {}} />
+        <Button label="Cash On Hand" onPress={() => navigation.navigate('cashOnHand')} />
         <Gap height={10} />
-        <Button label="Cash On Bank" onPress={() => {}} />
+        <Button label="Cash On Bank" onPress={() => navigation.navigate('cashOnBank')} />
       </View>
     </View>
   );

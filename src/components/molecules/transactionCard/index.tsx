@@ -1,52 +1,59 @@
-// buat text input
-
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
-const TransactionCard = ({date, item, price}) => {
+const TransactionCard = ({ date, items, price }) => {
+  const isExpense = price < 0;
+  const absPrice = Math.abs(price).toLocaleString('id-ID');
+  const formattedPrice = `${isExpense ? '-' : ''}Rp. ${absPrice}`;
+
   return (
-    <View style={styles.container}>
-        <View style={styles.container2}>
-            <Text style={styles.date}>{date}</Text>
-            <Text style={styles.item}>{item}</Text>
-        </View>
-            <View style={styles.container3}>
-                <Text style={styles.price}>{price}</Text>
-            </View>
-        </View>
-    );
+    <View style={styles.card}>
+      <View style={styles.left}>
+        <Text style={styles.date}>{date}</Text>
+        <Text style={styles.items}>{items}</Text>
+      </View>
+
+      <Text style={[styles.price, isExpense ? styles.expense : styles.income]}>
+        {formattedPrice}
+      </Text>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        width: 312,
-        height: 69,
-        borderRadius: 10,
-    },
-    container2: {
-        justifyContent: 'flex-start',
-    },
-    container3: {
-        alignItems: 'center',
-    },
+  card: {
+    height: 69,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 12,
+    shadowColor: 'black',
+    elevation: 8,
+    marginBottom: 16,
+  },
   date: {
     fontFamily: 'Poppins-Regular',
     fontSize: 14,
     color: '#8D92A3',
-    marginBottom: 6,
   },
-    item: {
+  items: {
     fontFamily: 'Poppins-Regular',
     fontSize: 14,
-    color: '##020202',
-    marginBottom: 6,
-    },
-      price: {
+    marginTop: 4,
+  },
+  price: {
     fontFamily: 'Poppins-Regular',
     fontSize: 14,
-    color: '#D9435E', // #1ABC9C klo dpe doi positif (nd utang/kurang)
-    marginBottom: 6,
-      }
+    fontWeight: 'bold',
+  },
+  expense: {
+    color: '#D9435E',
+  },
+  income: {
+    color: '#1ABC9C',
+  },
 });
 
 export default TransactionCard;
