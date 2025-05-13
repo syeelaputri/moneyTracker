@@ -111,8 +111,27 @@ const Home = ({route, navigation}) => {
   }
 
   function countTotalCash() {
-    const newTotal = cashOnBank + cashOnHand
-    setTotal(newTotal)
+    const newTotal = cashOnBank + cashOnHand;
+    setTotal(newTotal);
+  }
+
+  // tampilkan loading
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.spinnerContainer}>
+        <Text style={styles.spinnerText}>Loading...</Text>
+      </View>
+    );
   }
 
   return (
@@ -207,6 +226,14 @@ const styles = StyleSheet.create({
     width: 50,
     borderRadius: 10,
   },
+  spinnerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  spinnerText: {
+    fontSize: 16,
+  }
 });
 
 export default Home;

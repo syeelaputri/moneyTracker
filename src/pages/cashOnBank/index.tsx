@@ -53,15 +53,15 @@ const CashOnBank = ({ route }) => {
       function transformFirebaseSnapshot(snapshot) {
         const dataList = snapshot.val()
         if (!dataList) return []
-
+        
         const combinedDataList = Object.entries(dataList).map(([key, value]) => ({
           _id: key,
           ...value
         }))
-
+        
         return combinedDataList
       }
-
+      
       const filteredNewCashOnBankList = newCashOnBankList.slice(-3).reverse()
       console.log('newCashOnBankList', newCashOnBankList)
       console.log('filteredNewCashOnBankList', filteredNewCashOnBankList)
