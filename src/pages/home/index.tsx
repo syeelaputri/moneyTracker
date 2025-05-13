@@ -12,7 +12,7 @@ const Home = ({route, navigation}) => {
   const [user, setUser] = useState({});
   const [fullName, setFullName] = useState('');
   const [photo, setPhoto] = useState(NullPhoto);
-  const [totalBalance, setTotalBalance] = useState(0);
+  const [total, setTotal] = useState(0);
   const [cashOnHand, setCashOnHand] = useState(0);
   const [cashOnBank, setCashOnBank] = useState(0);
 
@@ -23,11 +23,10 @@ const Home = ({route, navigation}) => {
     onValue(userRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-        console.log(data);
         setUser(data);
         setFullName(data.fullName);
         setPhoto({uri: data.photo});
-        setTotalBalance(data.balance.total);
+        setTotal(data.balance.total);
         setCashOnHand(data.balance.cashOnHand);
         setCashOnBank(data.balance.cashOnBank);
       }
@@ -45,7 +44,7 @@ const Home = ({route, navigation}) => {
       </View>
       <View style={styles.contentWrapper}>
         <Text style={styles.subTitle}>Your Balance</Text>
-        <Text style={styles.totalBalance}>Rp. {totalBalance}</Text>
+        <Text style={styles.total}>Rp. {total}</Text>
         <View style={styles.line} />
         <View style={styles.subTotalWrapper}>
           <Text style={styles.subTotal}>Cash On Hand</Text>
@@ -56,9 +55,9 @@ const Home = ({route, navigation}) => {
           <Text style={styles.subTotal}>Rp. {cashOnBank}</Text>
         </View>
         <Text style={styles.subTitle}>Add Transaction</Text>
-        <Button label="Cash On Hand" onPress={() => navigation.navigate('cashOnHand')} />
+        <Button label="Cash On Hand" onPress={() => navigation.navigate('cashOnHand', { uid })} />
         <Gap height={10} />
-        <Button label="Cash On Bank" onPress={() => navigation.navigate('cashOnBank')} />
+        <Button label="Cash On Bank" onPress={() => navigation.navigate('cashOnBank', { uid })} />
       </View>
     </View>
   );
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     fontWeight: 'bold',
   },
-  totalBalance: {
+  total: {
     fontFamily: 'Poppins-SemiBold',
     color: '#000000',
     fontSize: 24,

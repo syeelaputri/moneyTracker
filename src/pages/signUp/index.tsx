@@ -38,12 +38,8 @@ const SignUp = ({navigation}) => {
       fullName: fullName,
       email: email,
       photo: photoBased64,
-    };
-
-    const balance = {
-      total: 0,
-      cashOnHand: 0,
-      cashOnBank: 0,
+      cashOnHand: '',
+      cashOnBank: ''
     };
 
     const auth = getAuth();
@@ -54,7 +50,6 @@ const SignUp = ({navigation}) => {
           const user = userCredential.user;
           // Simpan ke dalam realtime database
             set(ref(db, 'users/' + user.uid), data);
-            set(ref(db, 'users/' + user.uid + '/balance'), balance);
             showMessage({
               message: "Registrasi berhasil. Silahkan login!",
               type: 'success',
