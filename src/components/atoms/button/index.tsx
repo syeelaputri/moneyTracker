@@ -14,8 +14,6 @@ const Button = ({label, color = '#02CF8E', textColor = '#020202', onPress}) => {
   );
 };
 
-export default Button;
-
 const styles = StyleSheet.create({
   button: color => ({
     backgroundColor: color,
@@ -27,5 +25,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     fontSize: 14,
     color: textColor,
+    fontWeight: 'bold',
   }),
 });
+
+export default Button;

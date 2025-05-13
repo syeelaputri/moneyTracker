@@ -1,3 +1,5 @@
+// buat transaction card (halaman cashOnHand, cashOnBank)
+
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -8,7 +10,7 @@ const TransactionCard = ({ date, items, price }) => {
 
   return (
     <View style={styles.card}>
-      <View style={styles.left}>
+      <View>
         <Text style={styles.date}>{date}</Text>
         <Text style={styles.items}>{items}</Text>
       </View>

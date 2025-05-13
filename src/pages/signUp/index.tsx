@@ -132,8 +132,6 @@ const SignUp = ({navigation}) => {
   );
 };
 
-export default SignUp;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -178,3 +176,5 @@ const styles = StyleSheet.create({
     borderRadius: 90 / 2,
   },
 });
+
+export default SignUp;

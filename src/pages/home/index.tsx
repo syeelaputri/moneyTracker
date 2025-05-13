@@ -6,7 +6,6 @@ import {Button, Gap} from '../../components/atoms';
 import {NullPhoto} from '../../assets';
 import {getDatabase, ref, onValue} from 'firebase/database';
 
-
 const Home = ({route, navigation}) => {
   const {uid} = route.params;
   const [user, setUser] = useState({});
@@ -15,8 +14,14 @@ const Home = ({route, navigation}) => {
   const [total, setTotal] = useState(0);
   const [cashOnHand, setCashOnHand] = useState(0);
   const [cashOnBank, setCashOnBank] = useState(0);
+  const [cashOnBankList, setCashOnBankList] = useState([])
+  const [cashOnHandList, setCashOnHandList] = useState([])
 
   const db = getDatabase();
+
+  useEffect(() => {
+    autoUpdateCashOnBankAndHandList()
+  }, [])
 
   useEffect(()=>{
     const userRef = ref(db, 'users/' + uid);
@@ -32,6 +37,83 @@ const Home = ({route, navigation}) => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    countCashOnBank()
+  }, [cashOnBankList])
+
+  useEffect(() => {
+    countCashOnHand()
+  }, [cashOnHandList])
+
+  useEffect(() => {
+    countTotalCash()
+  }, [cashOnBank, cashOnHand])
+
+  function autoUpdateCashOnBankAndHandList() {
+    const db = getDatabase();
+    const cashOnBankListRef = ref(db, `users/${uid}/cashOnBank`)
+    const cashOnHandListRef = ref(db, `users/${uid}/cashOnHand`)
+
+    onValue(cashOnBankListRef, snapshot => {
+      const newCashOnBankList = transformFirebaseSnapshot(snapshot)
+
+      function transformFirebaseSnapshot(snapshot) {
+        const dataList = snapshot.val()
+        if (!dataList) return []
+
+        const combinedDataList = Object.entries(dataList).map(([key, value]) => ({
+          _id: key,
+          ...value
+        }))
+
+        return combinedDataList
+      }
+
+      setCashOnBankList(newCashOnBankList)
+    })
+
+    onValue(cashOnHandListRef, snapshot => {
+      const newCashOnHandList = transformFirebaseSnapshot(snapshot)
+
+      function transformFirebaseSnapshot(snapshot) {
+        const dataList = snapshot.val()
+        if (!dataList) return []
+
+        const combinedDataList = Object.entries(dataList).map(([key, value]) => ({
+          _id: key,
+          ...value
+        }))
+
+        return combinedDataList
+      }
+
+      setCashOnHandList(newCashOnHandList)
+    })
+  }
+
+  function countCashOnBank() {
+    let newCashOnBank = 0
+    cashOnBankList.forEach(item => {
+      if (item.type.includes('-')) newCashOnBank -= parseInt(item.type.replace('-', ''))
+      else newCashOnBank += parseInt(item.type)
+    })
+    setCashOnBank(newCashOnBank)
+  }
+
+  function countCashOnHand() {
+    let newCashOnHand = 0
+    cashOnHandList.forEach(item => {
+      if (item.type.includes('-')) newCashOnHand -= parseInt(item.type.replace('-', ''))
+      else newCashOnHand += parseInt(item.type)
+    })
+    setCashOnHand(newCashOnHand)
+  }
+
+  function countTotalCash() {
+    const newTotal = cashOnBank + cashOnHand
+    setTotal(newTotal)
+  }
 
   return (
     <View style={styles.pageContainer}>

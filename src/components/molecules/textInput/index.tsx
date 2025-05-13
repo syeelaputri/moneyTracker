@@ -12,8 +12,6 @@ const TextInput = ({label, placeholder, value, onChangeText}) => {
   );
 };
 
-export default TextInput;
-
 const styles = StyleSheet.create({
   label: {
     fontFamily: 'Poppins-Regular',
@@ -27,3 +25,5 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
+
+export default TextInput;

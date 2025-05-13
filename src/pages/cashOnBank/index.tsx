@@ -12,6 +12,7 @@ import {Header, TextInput} from '../../components/molecules';
 import {TransactionCard} from '../../components/molecules';
 import { getDatabase, onValue, ref, set } from "firebase/database";
 
+// ubah format tanggal
 function formatDate(isoString) {
   const date = new Date(isoString);
   const options = { day: '2-digit', month: 'long', year: 'numeric' };
@@ -35,7 +36,7 @@ const CashOnBank = ({ route }) => {
     const data = {
       date: new Date().toISOString(),
       description,
-      type
+      type,
     }
 
     const db = getDatabase();
@@ -52,15 +53,15 @@ const CashOnBank = ({ route }) => {
       function transformFirebaseSnapshot(snapshot) {
         const dataList = snapshot.val()
         if (!dataList) return []
-        
+
         const combinedDataList = Object.entries(dataList).map(([key, value]) => ({
           _id: key,
           ...value
         }))
-        
+
         return combinedDataList
       }
-      
+
       const filteredNewCashOnBankList = newCashOnBankList.slice(-3).reverse()
       console.log('newCashOnBankList', newCashOnBankList)
       console.log('filteredNewCashOnBankList', filteredNewCashOnBankList)
@@ -97,7 +98,7 @@ const CashOnBank = ({ route }) => {
         <Text style={styles.label}>Last 3 Transactions</Text>
 
         {cashOnBankList.map(cashOnBank => (
-          <TransactionCard // mo ganti semua, sesuaikan dgn data
+          <TransactionCard
             key={cashOnBank.date}
             date={formatDate(cashOnBank.date)}
             items={cashOnBank.description}
